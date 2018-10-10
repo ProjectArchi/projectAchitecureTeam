@@ -1,0 +1,17 @@
+Target =  structTest
+
+SRCS = structTest.c
+OBJS = $(SRCS:.c=.o)
+
+HEAD = ./Global/ADT/Dictionary.h ./Global/ADT/CircularQueue.h ./Global/DataTypes.h
+
+$(Target): $(OBJS)
+	@echo "transfer" $(OBJS) "into" $(Target)
+	gcc -o $@ $^
+
+$(OBJS):structTest.c $(HEAD)
+	gcc -c $<
+
+clean:
+	rm -rf $(Target) 
+	find . -name "*.o"  | xargs rm -f

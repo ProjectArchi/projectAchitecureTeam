@@ -1,0 +1,35 @@
+Target =  OurToma
+
+#source file
+SRCS = TomasuloSimulator.c ./Global/Utils/PrintUtility.c ./CacheEmulator/EmulateCache.c ./CPU/CPU.c
+
+# *.o file (compile file)
+OBJS = $(SRCS:.c=.o)
+OBJSToma = TomasuloSimulator.o
+OBJSPrint = ./Global/Utils/PrintUtility.o
+OBJSCache = ./CacheEmulator/EmulateCache.o
+OBJSCPU = ./CPU/CPU.o
+
+#partial *.h (partial head file besides Toma.h)
+HEAD = ./Global/ADT/Dictionary.h ./Global/ADT/CircularQueue.h ./Global/DataTypes.h
+
+$(Target): $(OBJS)
+	@echo "mainT"
+	gcc -o $@ $^
+
+TomasuloSimulator.o: TomasuloSimulator.c ./Global/TomasuloSimulator.h
+	gcc -c $<
+
+PrintUtility.o: ./Global/Utils/PrintUtility.c $(HEAD)
+	gcc -c $<
+
+EmulateCache.o: ./CacheEmulator/EmulateCache.c $(HEAD)
+	@echo "Cache"
+	gcc -c $<
+
+CPU.o: ./CPU/CPU.c $(HEAD)
+	@echo "CPU"
+	gcc -c $<
+
+clean:
+	rm -rf $(Target) $(OBJS)
