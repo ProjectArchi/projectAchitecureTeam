@@ -68,8 +68,9 @@ void commit(){
 		int rr = h -> RenamingRegister;
 		CDB--;
 		if(ins == BEQZ || ins == BNEZ || ins == BEQ || ins == BNE) {
-			//clean rob when branch not taken
+			//clean when branch mis-predicted
 			if (intRR[rr] == -1){
+				//flush ROB
 				int i = ROB -> head;
 				while(i != tail){
 					free(items[i]);
@@ -77,7 +78,12 @@ void commit(){
 					ROB -> count--;
 				}
 				free(items[tail]);
-			tail = head;
+				tail = head;
+				//flush Register Status
+				for (i = 0; i < 32; i++){
+					intRenamingRegister[i] -> busy = 0;
+					fpRenamingRegister[i] -> busy = 0;
+				}
 			}
 		} else if (ins == SD){
 			int data = cpu -> intRenamingRegister[rr];
@@ -95,11 +101,11 @@ void commit(){
                         addDictionaryEntry (dataCache, addrPtr, valuePtr);
 		} else if (ins == ADD.D || ins == SUB.D || ins == MUL.D || ins == DIV.D || ins == L.D){
 			fpRegister[h -> Destination] = fpRenamingRegister[rr];
-			int ad = h -> Destination;
-			getValueChainByDictionaryRegsRowKey (fpRegisterStatus, &ad) -> Busy = 0;
+			int ad = h -> Destination;//silly one
+			fpRegisterStatus[ad] -> Busy = 0;
 		} else {
-			intRegister[h -> Destination] = intRenamingRegister[rr];
-			getValueChainByDictionaryRegsRowKey (intRegisterStatus, &ad) -> Busy = 0;
+			intRegister[h -> Destination] = intRenamingRegister[rr];//silly one
+			intRegisterStatus[ad] -> Busy = 0;
 		}
 		free(h);
 	}
@@ -370,7 +376,7 @@ void executeStage(){
 			int i = MULT -> head;
 			int k = getCountCircularQueue(MULT);
 			while(k > 0){
-				MULT -> item[i] -> count++;
+				MULT -> items[i] -> count++;
 				i = (i + 1) % MULT -> size;
 				k--;
 			}
@@ -424,7 +430,7 @@ void executeStage(){
 			int i = FPADD -> head;
 			int k = getCountCircularQueue(FPADD);
 			while(k > 0){
-				FPADD -> item[i] -> count++;
+				FPADD -> items[i] -> count++;
 				i = (i + 1) % FPADD -> size;
 				k--;
 			}
@@ -486,7 +492,7 @@ void executeStage(){
                         int i = FPMULT -> head;
                         int k = getCountCircularQueue(FPMULT);
                         while(k > 0){
-                                FPMULT -> item[i] -> count++;
+                                FPMULT -> items[i] -> count++;
                                 i = (i + 1) % FPMULT -> size;
                                 k--;
                         }
@@ -573,7 +579,7 @@ void executeStage(){
 					int conflict = 0;
 					int i = ROB -> head;
 					while(i != (ROB -> tail + 1) % ROB -> size){
-						if (ROB -> item[i] -> Instruction -> op == SD && ROB -> item[i] -> Destination == wbBuffer -> lsAddr){
+						if (ROB -> items[i] -> Instruction -> op == SD && ROB -> items[i] -> Destination == wbBuffer -> lsAddr){
 							conflict = 1;
 							break;
 						}
@@ -595,7 +601,7 @@ void executeStage(){
 					int conflict = 0;
                                         int i = ROB -> head;
                                         while(i != (ROB -> tail + 1) % ROB -> size){
-                                                if (ROB -> item[i] -> Instruction -> op == S_D && ROB -> item[i] -> Destination == wbBuffer -> lsAddr){
+                                                if (ROB -> items[i] -> Instruction -> op == S_D && ROB -> items[i] -> Destination == wbBuffer -> lsAddr){
                                                         conflict = 1;
                                                         break;
                                                 }
@@ -661,6 +667,7 @@ void executeStage(){
                                         wbBuffer -> buResult = tmpRSV -> vj == 0 ? 0 : -1;
 					break;
 			}
+			wbBuffer -> buResult = ROB -> items[tmpRSV -> Destination] -> predictFlag == wbBuffer -> buResult ? 0 : -1;
 		}
 	} else {
 		//check unit input
