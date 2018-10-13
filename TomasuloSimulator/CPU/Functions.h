@@ -69,7 +69,7 @@ void commit(){
 		CDB--;
 		if(ins == BEQZ || ins == BNEZ || ins == BEQ || ins == BNE) {
 			//clean when branch mis-predicted
-			if (intRR[rr] != h -> Instructions -> predictFlag){
+			if (intRR[rr] != h -> Instruction -> predictFlag){
 				//flush ROB
 				int i = ROB -> head;
 				while(i != tail){
