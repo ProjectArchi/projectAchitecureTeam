@@ -251,21 +251,21 @@ void writeBack(){
                 ROB -> items[Dest] -> State = 3;
                 fpRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                 DictionaryRSVRowEntry *tmpEntry = RSV -> head;
-                        while(tmpEntry != NULL){
-                                RSVRow *tmp = tmpEntry -> value;
-                                while(tmp != NULL){
-                                        if(tmp -> qj == Dest){
-                                                tmp -> vj = Res;
-                                                tmp -> qj = 0;
-                                        }
-                                        if(tmp -> qk == Dest){
-                                                tmp -> vk = Res;
-                                                tmp -> qk = 0;
-                                        }
-                                        tmp == tmp -> next;
-                                }
-                                tmpEntry = tmpEntry -> next;
-                        }
+		while(tmpEntry != NULL){
+			RSVRow *tmp = tmpEntry -> value;
+			while(tmp != NULL){
+				if(tmp -> qj == Dest){
+					tmp -> vj = Res;
+					tmp -> qj = 0;
+				}
+				if(tmp -> qk == Dest){
+					tmp -> vk = Res;
+					tmp -> qk = 0;
+				}
+				tmp == tmp -> next;
+			}
+			tmpEntry = tmpEntry -> next;
+		}
                 CDB--;
 		wbBuffer -> fpaddFlag = 0;
 		Unit *unit = dequeueCircular(FPADD);
@@ -279,21 +279,21 @@ void writeBack(){
                 ROB -> items[Dest] -> State = 3;
                 fpRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                 DictionaryRSVRowEntry *tmpEntry = RSV -> head;
-                        while(tmpEntry != NULL){
-                                RSVRow *tmp = tmpEntry -> value;
-                                while(tmp != NULL){
-                                        if(tmp -> qj == Dest){
-                                                tmp -> vj = Res;
-                                                tmp -> qj = 0;
-                                        }
-                                        if(tmp -> qk == Dest){
-                                                tmp -> vk = Res;
-                                                tmp -> qk = 0;
-                                        }
-                                        tmp == tmp -> next;
-                                }
-                                tmpEntry = tmpEntry -> next;
-                        }
+		while(tmpEntry != NULL){
+			RSVRow *tmp = tmpEntry -> value;
+			while(tmp != NULL){
+				if(tmp -> qj == Dest){
+					tmp -> vj = Res;
+					tmp -> qj = 0;
+				}
+				if(tmp -> qk == Dest){
+					tmp -> vk = Res;
+					tmp -> qk = 0;
+				}
+				tmp == tmp -> next;
+			}
+			tmpEntry = tmpEntry -> next;
+		}
                 CDB--;
 		wbBuffer -> fpmultFlag = 0;
 		Unit *unit = dequeueCircular(FPMULT);
@@ -307,21 +307,21 @@ void writeBack(){
                 ROB -> items[Dest] -> State = 3;
                 fpRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                 DictionaryRSVRowEntry *tmpEntry = RSV -> head;
-                        while(tmpEntry != NULL){
-                                RSVRow *tmp = tmpEntry -> value;
-                                while(tmp != NULL){
-                                        if(tmp -> qj == Dest){
-                                                tmp -> vj = Res;
-                                                tmp -> qj = 0;
-                                        }
-                                        if(tmp -> qk == Dest){
-                                                tmp -> vk = Res;
-                                                tmp -> qk = 0;
-                                        }
-                                        tmp == tmp -> next;
-                                }
-                                tmpEntry = tmpEntry -> next;
-                        }
+		while(tmpEntry != NULL){
+			RSVRow *tmp = tmpEntry -> value;
+			while(tmp != NULL){
+				if(tmp -> qj == Dest){
+					tmp -> vj = Res;
+					tmp -> qj = 0;
+				}
+				if(tmp -> qk == Dest){
+					tmp -> vk = Res;
+					tmp -> qk = 0;
+				}
+				tmp == tmp -> next;
+			}
+			tmpEntry = tmpEntry -> next;
+		}
                 CDB--;
 		wbBuffer -> fpdivFlag = 0;
 		Unit *unit = dequeueCircular(FPDIV);
