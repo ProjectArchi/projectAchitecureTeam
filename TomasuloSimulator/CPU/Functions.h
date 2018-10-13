@@ -60,9 +60,9 @@ CircularQueue *BU = createCircularQueue (1);
 
 //Commit function
 void commit(){
-	while(CDB > 0 && getHeadCircularQueue(ROB)->Busy == 1 && getHeadCircularQueue(ROB)->state == 1){
+	while(CDB > 0 && getHeadCircularQueue(ROB)->Busy == 1 && getHeadCircularQueue(ROB)->state == 3){
 		getHeadCircularQueue(ROB)->Busy == 0;
-		getHeadCircularQueue(ROB)->state == 0;
+		getHeadCircularQueue(ROB)->state == 4;
 		h = dequeueCircular(ROB);
 		Instruction *ins = h -> Instruction -> op;
 		int rr = h -> RenamingRegister;
@@ -123,7 +123,7 @@ void writeBack(){
 		int Res = wbBuffer -> intResult;
 		int Dest = wbBuffer -> intRSV -> Destination;
 		wbBuffer -> intRSV -> Busy = 0;
-		ROB -> items[Dest] -> State = 1;
+		ROB -> items[Dest] -> State = 3;
 		intRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
 		DictionaryRSVRowEntry *tmp = RSV -> head;
 		while(tmp != NULL){
@@ -146,7 +146,7 @@ void writeBack(){
 		int Res = wbBuffer -> multResult;
                 int Dest = wbBuffer -> multRSV -> Destination;
                 wbBuffer -> multRSV -> Busy = 0;
-		ROB -> items[Dest] -> State = 1;
+		ROB -> items[Dest] -> State = 3;
                 intRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                 DictionaryRSVRowEntry *tmp = RSV -> head;
                 while(tmp != NULL){
@@ -170,7 +170,7 @@ void writeBack(){
 			int Res = wbBuffer -> lsIntResult;
 			int Dest = wbBuffer -> lsRSV -> Destination;
 			wbBuffer -> lsRSV -> Busy = 0;
-			ROB -> items[Dest] -> State = 1;
+			ROB -> items[Dest] -> State = 3;
                 	intRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                 	DictionaryRSVRowEntry *tmp = RSV -> head;
                 	while(tmp != NULL){
@@ -189,7 +189,7 @@ void writeBack(){
 			double Res = wbBuffer -> lsFpResult;
 			int Dest = wbBuffer -> lsRSV -> Destination;
                         wbBuffer -> lsRSV -> Busy = 0;
-                        ROB -> items[Dest] -> State = 1;
+                        ROB -> items[Dest] -> State = 3;
                         fpRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                         DictionaryRSVRowEntry *tmp = RSV -> head;
                         while(tmp != NULL){
@@ -209,7 +209,7 @@ void writeBack(){
 			int Dest = wbBuffer -> lsRSV -> Destination;
 			int Addr = wbBuffer -> lsAddr;
 			wbBuffer -> lsRSV -> Busy = 0;
-			ROB -> items[Dest] -> State = 1;
+			ROB -> items[Dest] -> State = 3;
 			ROB -> items[Dest] -> Destination = lsAddr;
                         intRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
 		}
@@ -218,7 +218,7 @@ void writeBack(){
                         int Dest = wbBuffer -> lsRSV -> Destination;
 			int Addr = wbBuffer -> lsAddr;
                         wbBuffer -> lsRSV -> Busy = 0;
-                        ROB -> items[Dest] -> State = 1;
+                        ROB -> items[Dest] -> State = 3;
 			ROB -> items[Dest] -> Destination = lsAddr;
                         fpRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                 }
@@ -232,7 +232,7 @@ void writeBack(){
 		double Res = wbBuffer -> fpaddResult;
                 int Dest = wbBuffer -> fpaddRSV -> Destination;
                 wbBuffer -> fpaddRSV -> Busy = 0;
-                ROB -> items[Dest] -> State = 1;
+                ROB -> items[Dest] -> State = 3;
                 fpRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                 DictionaryRSVRowEntry *tmp = RSV -> head;
                 while(tmp != NULL){
@@ -256,7 +256,7 @@ void writeBack(){
 		double Res = wbBuffer -> fpmultResult;
                 int Dest = wbBuffer -> fpmultRSV -> Destination;
                 wbBuffer -> fpmultRSV -> Busy = 0;
-                ROB -> items[Dest] -> State = 1;
+                ROB -> items[Dest] -> State = 3;
                 fpRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                 DictionaryRSVRowEntry *tmp = RSV -> head;
                 while(tmp != NULL){
@@ -280,7 +280,7 @@ void writeBack(){
                 double Res = wbBuffer -> fpdivResult;
                 int Dest = wbBuffer -> fpdivRSV -> Destination;
                 wbBuffer -> fpdivRSV -> Busy = 0;
-                ROB -> items[Dest] -> State = 1;
+                ROB -> items[Dest] -> State = 3;
                 fpRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
                 DictionaryRSVRowEntry *tmp = RSV -> head;
                 while(tmp != NULL){
@@ -304,7 +304,7 @@ void writeBack(){
 		int Res = wbBuffer -> buResult;
 		int Dest = wbBuffer -> buRSV -> Destination;;
 		wbBuffer -> buRSV -> Busy = 0;
-		ROB -> items[Dest] -> State = 1;
+		ROB -> items[Dest] -> State = 3;
                 intRenamingRegister[ROB -> items[Dest] -> RenamingRegister] = Res;
 		CDB--;
 		wbBuffer -> buFlag = 0;
