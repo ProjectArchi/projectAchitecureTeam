@@ -69,7 +69,7 @@ void commit(){
 		CDB--;
 		if(ins == BEQZ || ins == BNEZ || ins == BEQ || ins == BNE) {
 			//clean when branch mis-predicted
-			if (intRR[rr] == -1){
+			if (intRR[rr] != h -> Instructions -> predictFlag){
 				//flush ROB
 				int i = ROB -> head;
 				while(i != tail){
@@ -83,6 +83,13 @@ void commit(){
 				for (i = 0; i < 32; i++){
 					intRenamingRegister[i] -> busy = 0;
 					fpRenamingRegister[i] -> busy = 0;
+				}
+				//Move PC to right position
+				if (intRR[rr] == 0){
+					PC = h -> Instruction -> Immediate;
+				}
+				if (intRR[rr] == -1){
+					PC = h -> Instruction -> InstructionPC + 4;
 				}
 			}
 		} else if (ins == SD){
@@ -337,7 +344,7 @@ void executeStage(){
 			tmpRSV = getHeadCircualrQueue(INT) -> rsv;
 			wbBuffer -> intRSV = tmpRSV;
 			wbBuffer -> intFlag = 1;
-			switch(tmpRSV -> Instruction -> op){
+			switch(tmpRSV -> op){
 				case ANDI:
 					wbBuffer -> intResult = tmpRSV -> vj & tmpRSV -> A;
 					break;
@@ -438,7 +445,7 @@ void executeStage(){
 			if(getHeadCircularQueue(FPADD) -> count = 3){
 				tmpRSV = getHeadCircularQueue(FPADD) -> rsv;
                         	wbBuffer -> fpaddRSV = tmpRSV;
-				switch(tmpRSV -> Instruction -> op){
+				switch(tmpRSV -> op){
 					case ADD.D: 
 						wbBuffer -> fpaddResult = tmpRSV -> vj + tmpRSV -> vk;
 						break;
@@ -572,7 +579,7 @@ void executeStage(){
 		if(getHeadCircularQueue(LS) -> count == 1 && wbBuffer -> lsFlag == 0){
 			tmpRSV = getHeadCircularQueue(LS) -> rsv;
 			wbBuffer -> lsRSV = tmpRSV
-			switch(tmpRSV -> Instructions -> op){
+			switch(tmpRSV -> op){
 				case LD:
 					wbBuffer -> lsAddr = tmpRSV -> vj + rmpRSV -> A;
 					//Check memory address confliction
@@ -653,7 +660,7 @@ void executeStage(){
 			tmpRSV = getHeadCircularQueue(BU) -> rsv;
 			wbBuffer -> lsRSV = tmpRSV;
 			//get result 0---taken -1---not taken
-			switch(tmpRSV -> Instruction -> op){
+			switch(tmpRSV -> op){
 				case BNE:
 					wbBuffer -> buResult = tmpRSV -> vj != tmpRSV -> vk ? 0 : -1;
 					break;
@@ -667,7 +674,27 @@ void executeStage(){
                                         wbBuffer -> buResult = tmpRSV -> vj == 0 ? 0 : -1;
 					break;
 			}
-			wbBuffer -> buResult = ROB -> items[tmpRSV -> Destination] -> predictFlag == wbBuffer -> buResult ? 0 : -1;
+			//Update BTB
+			if (wbBuffer -> buResult == 0 && ROB -> items[tmpRSV -> Destination] -> Instruction -> predictFlag == -1){
+				int i;
+				for (i = 0; i < 16; i++){
+					if (BTB[i] -> InstructionPC == -1){
+						BTB[i] -> InstructionPC = ROB -> items[tmpRSV -> Destination] -> Instruction -> InstructionPC;
+						BTB[i] -> PredictedPC = tmpRSV -> A;
+						break;
+					}
+				}
+			}
+			if (wbBuffer -> buResult == -1 && ROB -> items[tmpRSV -> Destination] -> Instruction -> predictFlag == 0){
+                                int i;
+                                for (i = 0; i < 16; i++){
+                                        if (BTB[i] -> InstructionPC == ROB -> items[tmpRSV -> Destination] -> Instruction -> InstructionPC){
+                                                BTB[i] -> InstructionPC = -1;
+                                                BTB[i] -> PredictedPC = -1;
+                                                break;
+                                        }
+                                }
+                        }
 		}
 	} else {
 		//check unit input
