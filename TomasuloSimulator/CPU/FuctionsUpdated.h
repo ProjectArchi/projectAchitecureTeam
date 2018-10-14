@@ -93,14 +93,14 @@ void commit(){
 				}
 			}
 		} else if (ins == SD){
-			int data = cpu -> intRenamingRegister[rr];
+			int data = intRenamingRegister[rr];
 			*((int*)addrPtr) = h -> Destination;
 			removeDictionaryEntriesByKey (dataCache, addrPtr);
 
 			*((double*)valuePtr) = data;
 			addDictionaryEntry (dataCache, addrPtr, valuePtr);
 		} else if (ins == S_D){
-			double data = cpu -> fpRenamingRegister[rr];
+			double data = fpRenamingRegister[rr];
                         *((int*)addrPtr) = h -> Destination;
                         removeDictionaryEntriesByKey (dataCache, addrPtr);
 
@@ -353,7 +353,7 @@ void executeStage(){
 	//INT unit execution
 	if(getCountCircularQueue(INT) == 0){
 		//Check input
-		tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> INTKey);
+		tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "INT");
                 tmpRSV = tmpEntry -> value;
                 while(tmpRSV != null){
                         if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
@@ -423,7 +423,7 @@ void executeStage(){
 				wbBuffer -> multFlag = 1;
 			}
 			//check unit input
-			tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> MULTKey);
+			tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "MULT");
 			tmpRSV = tmpEntry -> value;
 			while(tmpRSV != NULL){
 				if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
@@ -438,7 +438,7 @@ void executeStage(){
 		}
 	} else {
 		//check unit input
-		tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> MULTKey);
+		tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "MULT");
                 tmpRSV = tmpEntry -> value;
 		while(tmpRSV != NULL){
 			if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
@@ -480,7 +480,7 @@ void executeStage(){
 				wbBuffer -> fpaddFlag = 1;
 			}
 			//check unit input
-			tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> FPaddKey);
+			tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "FPadd");
                         tmpRSV = tmpEntry -> value;
 			while(tmpRSV != NULL){
                                 if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
@@ -494,7 +494,7 @@ void executeStage(){
                         }
 	} else {
 		//check unit input
-		tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> FPaddKey);
+		tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "FPadd");
 		tmpRSV = tmpEntry -> value;
 		while(tmpRSV != NULL){
 			if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
@@ -530,7 +530,7 @@ void executeStage(){
                                 wbBuffer -> fpmultFlag = 1;
                         }
                         //check unit input
-                        tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> FPmultKey);
+                        tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "FPmult");
 			tmpRSV = tmpEntry -> value;
 			while(tmpRSV != NULL){
                                 if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
@@ -545,7 +545,7 @@ void executeStage(){
                 }
         } else {
                 //check unit input
-                tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> FPmultKey);
+                tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "FPmult");
 		tmpRSV = tmpEntry -> value;
 		while(tmpRSV != NULL){
 			if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
@@ -572,7 +572,7 @@ void executeStage(){
 		}
 	} else {
 		//check unit input
-                tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> FPdivKey);
+                tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "FPdiv");
 		tmpRSV = tmpEntry -> value;
                 while(tmpRSV != NULL){
                         if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
@@ -651,7 +651,7 @@ void executeStage(){
 		}
 	} else {
 		//check unit input
-                tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> LSKey);
+                tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "Load/Store");
 		tmpRSV = tmpEntry -> value;
                 while(tmpRSV != NULL){
                         if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
@@ -710,7 +710,7 @@ void executeStage(){
 	} else {
 		//check unit input
                 tmpEntry = RSV -> head;
-                tmpEntry = getValueChainByDictionaryRSRowKey(RSV, cpu -> BUKey);
+                tmpEntry = getValueChainByDictionaryRSRowKey(RSV, "BU");
                 tmpRSV = tmpEntry -> value;
 		while(tmpRSV != NULL){
                         if (tmpRSV -> Busy == 1 && tmpRSV -> qj == 0 && tmpRSV -> qk == 0){
